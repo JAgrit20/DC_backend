@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
-import sampleRoute from './routes/sampleRoute.js'
+import studentRouter from './routes/studentRoute.js'
 
 import connectDB from './config/db.js'
 
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
   res.send('API is running....')
 })
 
-app.use('/', sampleRoute)
+app.use('/', studentRouter)
 
 const PORT = process.env.PORT || 5000
 

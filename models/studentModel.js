@@ -1,56 +1,59 @@
 import mongoose from 'mongoose'
 
-const Student = new mongoose.Schema({
-  Board : {
+const studentSchema = new mongoose.Schema({
+  board: {
     type: String,
   },
-  City : {
+  city: {
     type: String,
   },
-  Email  : {
+  email: {
     type: String,
   },
-  Grade  : {
+  grade: {
     type: String,
   },
-  Institute  : {
+  institute: {
     type: String,
   },
-  State  : {
+  state: {
     type: String,
   },
-  dob  : {
+  dob: {
     type: String,
   },
-  firstname  : {
+  firstname: {
     type: String,
   },
-  City : {
+  city: {
     type: String,
   },
-  lastname  : {
+  lastname: {
     type: String,
   },
-  pdoubts  : {
+  meetingId: {
     type: String,
   },
-  phonenumber  : {
+  pdoubts: {
     type: String,
   },
-  photoUrl  : {
+  phonenumber: {
     type: String,
   },
-  slang   : {
+  photoUrl: {
     type: String,
   },
-  tdoubts   : {
+  slang: {
     type: String,
   },
-  validity   : {
+  tdoubts: {
+    type: String,
+  },
+  validity: {
     type: String,
   },
 })
 
-const Sample = mongoose.model('Sample', Student)
+const Student = mongoose.model('Student', studentSchema)
 
-export default Sample
+export default Student
