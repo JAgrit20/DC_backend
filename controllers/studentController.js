@@ -8,36 +8,22 @@ export const pushDetails = async (req, res, next) => {
   try {
     const student = new Student(req.body)
     const newDetails = await student.save()
-    res.status(201).json(newDetails)
+    res.status(200).json(newDetails)
   } catch (error) {
-    res.status(404)
-    const err = new Error('Error pushing student details')
-    next(err)
-  }
-}
-
-// @desc Fetch all student details from DB
-// @route GET /student
-// @access Public
-
-export const fetchAllDetails = async (req, res, next) => {
-  try {
-    const student = await Student.find({})
-    res.status(200).json(student)
-  } catch (error) {
-    res.status(404)
-    const err = new Error('Error fetching all student details')
+    res.status(500)
+    const err = new Error('Internal Server Error')
     next(err)
   }
 }
 
 // @desc Fetch student details from DB
-// @route GET /student/:id
+// @route GET /student
 // @access Public
 
-export const fetchDetailsById = async (req, res, next) => {
+export const fetchDetails = async (req, res, next) => {
   try {
-    const student = await Student.findById(req.params.id)
+    const { uid } = req.body
+    const student = await Student.findOne({ uid: uid })
     if (student) {
       res.status(200).json(student)
     } else {
@@ -53,19 +39,17 @@ export const fetchDetailsById = async (req, res, next) => {
 }
 
 // @desc Update student details
-// @route PUT /student/:id
+// @route PUT /student
 // @access Public
 
-export const updateDetailsById = async (req, res, next) => {
+export const updateDetails = async (req, res, next) => {
   try {
-    const { meetingId } = req.body
-    const student = await Student.findById(req.params.id)
+    const { uid, meetingId } = req.body
+    const student = await Student.findOne({ uid: uid })
     if (student) {
       student.meetingId = meetingId
       const updatedStudent = await student.save()
-      res
-        .status(200)
-        .json({ msg: 'meetingId updated successfully', updatedStudent })
+      res.status(200).json(updatedStudent)
     } else {
       res.status(404)
       const err = new Error('Student does not exist')

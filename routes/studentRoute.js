@@ -1,14 +1,12 @@
 import express from 'express'
 import {
   pushDetails,
-  fetchAllDetails,
-  fetchDetailsById,
-  updateDetailsById,
+  fetchDetails,
+  updateDetails,
 } from '../controllers/studentController.js'
 
 const router = express.Router()
 
-router.route('/').get(fetchAllDetails).post(pushDetails)
-router.route('/:id').get(fetchDetailsById).put(updateDetailsById)
+router.route('/').get(fetchDetails).post(pushDetails).put(updateDetails)
 
 export default router
