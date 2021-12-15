@@ -63,7 +63,9 @@ export const updateDetailsById = async (req, res, next) => {
     if (student) {
       student.meetingId = meetingId
       const updatedStudent = await student.save()
-      res.status(200).json(updatedStudent)
+      res
+        .status(200)
+        .json({ msg: 'meetingId updated successfully', updatedStudent })
     } else {
       res.status(404)
       const err = new Error('Student does not exist')
