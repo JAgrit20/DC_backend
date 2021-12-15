@@ -32,10 +32,10 @@ const Student = new mongoose.Schema({
     type: String,
   },
   pdoubts  : {
-    type: Integer,
+    type: String,
   },
   phonenumber  : {
-    type: Integer,
+    type: String,
   },
   photoUrl  : {
     type: String,
@@ -44,7 +44,7 @@ const Student = new mongoose.Schema({
     type: String,
   },
   tdoubts   : {
-    type: Integer,
+    type: String,
   },
   validity   : {
     type: String,
