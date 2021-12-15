@@ -8,7 +8,7 @@ import {
 
 const router = express.Router()
 
-router.route('/student').get(fetchAllDetails).post(pushDetails)
-router.route('/student/:id').get(fetchDetailsById).put(updateDetailsById)
+router.route('/').get(fetchAllDetails).post(pushDetails)
+router.route('/:id').get(fetchDetailsById).put(updateDetailsById)
 
 export default router
