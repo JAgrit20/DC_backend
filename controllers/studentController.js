@@ -22,8 +22,8 @@ export const pushDetails = async (req, res, next) => {
 
 export const fetchDetails = async (req, res, next) => {
   try {
-    const { uid } = req.body
-    const student = await Student.findOne({ uid: uid })
+    const filter = req.params.uid
+    const student = await Student.findOne({ uid: filter })
     if (student) {
       res.status(200).json(student)
     } else {
