@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 
 import studentRouter from './routes/studentRoute.js'
+import recordingRouter from './routes/recordingRoute.js'
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 import connectDB from './config/db.js'
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/student', studentRouter)
+app.use('/recording', recordingRouter)
 
 app.use(notFound)
 app.use(errorHandler)

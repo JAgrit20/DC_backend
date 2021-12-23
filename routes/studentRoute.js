@@ -3,7 +3,7 @@ import {
   pushDetails,
   fetchDetails,
   updateDetails,
-} from '../controllers/studentController.js'
+} from '../controllers/studentControllers.js'
 
 const router = express.Router()
 
