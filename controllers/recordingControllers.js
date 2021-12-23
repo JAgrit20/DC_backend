@@ -25,7 +25,7 @@ export const pushRecording = async (req, res, next) => {
 }
 
 // @desc Fetch student details from DB
-// @route GET /recording
+// @route GET /recording/:id
 // @access Public
 
 export const fetchRecordings = async (req, res, next) => {
