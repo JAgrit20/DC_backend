@@ -1,75 +1,73 @@
-import axios from 'axios';
+import axios from 'axios'
 import fs from 'fs'
 import Downloader from 'nodejs-file-downloader'
 import AWS from 'aws-sdk'
-import Path from 'path';
-const __dirname = process.cwd();
+import Path from 'path'
+const __dirname = process.cwd()
 // const fs = require('fs');
 // const AWS = require('aws-sdk');
 import Recording from '../models/recordingModel.js'
-const ID = 'AKIASHPACG3FLHK4KKJ5';
-const SECRET = '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';
+const ID = 'AKIASHPACG3FLHK4KKJ5'
+const SECRET = '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'
 
 // The name of the bucket that you have created
-const BUCKET_NAME = 'dcrecordings';
+const BUCKET_NAME = 'dcrecordings'
 const s3 = new AWS.S3({
   accessKeyId: ID,
-  secretAccessKey: SECRET
-});
+  secretAccessKey: SECRET,
+})
 const params = {
   Bucket: BUCKET_NAME,
   CreateBucketConfiguration: {
-      // Set your region here
-      LocationConstraint: "ap-south-1"
-  }
-};
+    // Set your region here
+    LocationConstraint: 'ap-south-1',
+  },
+}
 // @desc Push recording data in DB
 // @route POST /recording
 // @access Public
 
-async function D2S3(body){
-  body.recordings.map((e)=>{
-      var name=e.outputFileName;
-      const path =  Path.resolve(__dirname, 'temp')
-      const downloader = new Downloader({
-        url: e.downloadUrl,
-        directory: path,
-        fileName: `${name}`, //This will be the file name.
-      });
-        try{
-            downloader.download();
-            const fileContent = fs.readFileSync(`${path}\\${name}`); 
-            const params = {
-                Bucket: BUCKET_NAME,
-                Key: `${name}`, // File name you want to save as in S3
-                Body: fileContent
-            };
-        
-            // Uploading files to the bucket
-            try{
-              var data = s3.upload(params).promise();
-              console.log(data);
-              console.log(`File uploaded successfully`);
-              // console.log(data);
-              e.downloadUrl=data.Location;
-              // console.log(e);
-              console.log(body);
-            }
-            catch (err) {
-              console.log(err)
-            }
-        }
-        catch(er){
-          console.log(er);
-        }
-  });
-  return body;
+const D2S3 = async (body) => {
+  body.recordings.map(async (e) => {
+    var name = e.outputFileName
+    const path = Path.resolve(__dirname, 'temp')
+    const downloader = new Downloader({
+      url: e.downloadUrl,
+      directory: path,
+      fileName: `${name}`, //This will be the file name.
+    })
+    try {
+      downloader.download()
+      const fileContent = fs.readFileSync(`${path}\\${name}`)
+      const params = {
+        Bucket: BUCKET_NAME,
+        Key: `${name}`, // File name you want to save as in S3
+        Body: fileContent,
+      }
+
+      // Uploading files to the bucket
+      try {
+        var data = await s3.upload(params)
+        console.log(data)
+        console.log(`File uploaded successfully`)
+        // console.log(data);
+        e.downloadUrl = data.Location
+        // console.log(e);
+        console.log(body)
+      } catch (err) {
+        console.log(err)
+      }
+    } catch (er) {
+      console.log(er)
+    }
+  })
+  return body
 }
 
 export const pushRecording = async (req, res, next) => {
   try {
-    console.log(await D2S3(req.body));
-    console.log("This function");
+    console.log(await D2S3(req.body))
+    console.log('This function')
     const recording = new Recording(req.body)
     const filter = req.body.studentUid
     const recordingExists = await Recording.findOne({ studentUid: filter })
@@ -82,7 +80,7 @@ export const pushRecording = async (req, res, next) => {
       res.status(200).json(newRecording)
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(500)
     const err = new Error('Internal Server Error')
     next(err)
