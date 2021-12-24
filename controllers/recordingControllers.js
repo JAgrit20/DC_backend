@@ -23,20 +23,18 @@ const params = {
     LocationConstraint: 'ap-south-1',
   },
 }
-// @desc Push recording data in DB
-// @route POST /recording
-// @access Public
 
-const D2S3 = async (body) => {
-  const Mrecordings=await body.recordings.map(async (e,i) => {
-    var name = e.outputFileName
-    const path = Path.resolve(__dirname, 'temp')
-    const downloader = new Downloader({
-      url: e.downloadUrl,
-      directory: path,
-      fileName: `${name}`, //This will be the file name.
-    })
+const D2S3 = (recordings) => {
+  const Mrecordings = recordings.map(async (e, i) => {
     try {
+      var name = e.outputFileName
+      const path = Path.resolve(__dirname, 'temp')
+      const downloader = new Downloader({
+        url: e.downloadUrl,
+        directory: path,
+        fileName: `${name}`, //This will be the file name.
+      })
+
       await downloader.download()
       const fileContent = fs.readFileSync(`${path}/${name}`)
       const params = {
@@ -46,37 +44,52 @@ const D2S3 = async (body) => {
       }
 
       // Uploading files to the bucket
-      try {
-        var data = await s3.upload(params).promise()
+
+      await s3.upload(params, (s3Err, data) => {
+        if (s3Err) throw s3Err
         console.log(data)
         console.log(`File uploaded successfully`)
         fs.unlink(`${path}/${name}`, (err) => {
-          if (err) throw err;
-          console.log('Temp cleared');
-        });
-        e.downloadUrl = data.Location;
-        return await e;
-      } catch (err) {
-        console.log(err)
-      }
-    } catch (er) {
-      console.log(er)
+          if (err) throw err
+          console.log('Temp cleared')
+        })
+        return {
+          ...e,
+          downloadUrl: data.Location,
+        }
+      })
+    } catch (error) {
+      console.log(error)
     }
+
     // if(i==body.recordings.length-1)
     // return body;
   })
-  return Mrecordings;
+  Promise.all(Mrecordings).then((data) => {
+    console.log(data)
+    return data
+  })
 }
+
+// @desc Push recording data in DB
+// @route POST /recording
+// @access Public
 
 export const pushRecording = async (req, res, next) => {
   try {
-    const body=req.body;
-    body.recordings=await D2S3(req.body);
-    console.log("d2s3 here");
-    // body.recordings.then((data)=>console.log(data))
-    console.log(body);
-    const recording = new Recording(body)
-    const filter = body.studentUid
+    let { studentUid, tutorUid, meetingId, roomName, recordings } = req.body
+    const newRecordings = await D2S3(recordings)
+    console.log('d2s3 here')
+    console.log(newRecordings)
+    // recordings.map((record, i) => console.log(record))
+    const recording = new Recording({
+      studentUid,
+      tutorUid,
+      meetingId,
+      roomName,
+      newRecordings,
+    })
+    const filter = studentUid
     const recordingExists = await Recording.findOne({ studentUid: filter })
     if (recordingExists) {
       res.status(404)
