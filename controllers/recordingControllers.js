@@ -28,7 +28,7 @@ const params = {
 // @access Public
 
 const D2S3 = async (body) => {
-  body.recordings.map(async (e) => {
+  const Mrecordings=await body.recordings.map(async (e,i) => {
     var name = e.outputFileName
     const path = Path.resolve(__dirname, 'temp')
     const downloader = new Downloader({
@@ -37,8 +37,8 @@ const D2S3 = async (body) => {
       fileName: `${name}`, //This will be the file name.
     })
     try {
-      downloader.download()
-      const fileContent = fs.readFileSync(`${path}\\${name}`)
+      await downloader.download()
+      const fileContent = fs.readFileSync(`${path}/${name}`)
       const params = {
         Bucket: BUCKET_NAME,
         Key: `${name}`, // File name you want to save as in S3
@@ -47,29 +47,36 @@ const D2S3 = async (body) => {
 
       // Uploading files to the bucket
       try {
-        var data = await s3.upload(params)
+        var data = await s3.upload(params).promise()
         console.log(data)
         console.log(`File uploaded successfully`)
-        // console.log(data);
-        e.downloadUrl = data.Location
-        // console.log(e);
-        console.log(body)
+        fs.unlink(`${path}/${name}`, (err) => {
+          if (err) throw err;
+          console.log('Temp cleared');
+        });
+        e.downloadUrl = data.Location;
+        return await e;
       } catch (err) {
         console.log(err)
       }
     } catch (er) {
       console.log(er)
     }
+    // if(i==body.recordings.length-1)
+    // return body;
   })
-  return body
+  return Mrecordings;
 }
 
 export const pushRecording = async (req, res, next) => {
   try {
-    console.log(await D2S3(req.body))
-    console.log('This function')
-    const recording = new Recording(req.body)
-    const filter = req.body.studentUid
+    const body=req.body;
+    body.recordings=await D2S3(req.body);
+    console.log("d2s3 here");
+    // body.recordings.then((data)=>console.log(data))
+    console.log(body);
+    const recording = new Recording(body)
+    const filter = body.studentUid
     const recordingExists = await Recording.findOne({ studentUid: filter })
     if (recordingExists) {
       res.status(404)
