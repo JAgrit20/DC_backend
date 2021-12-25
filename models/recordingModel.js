@@ -6,10 +6,6 @@ const recordingSchema = new mongoose.Schema(
       type: 'String',
       required: true,
     },
-    tutorUid: {
-      type: 'String',
-      required: true,
-    },
     meetingId: {
       type: 'String',
       required: true,
