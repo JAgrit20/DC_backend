@@ -7,8 +7,16 @@ import Student from '../models/studentModel.js'
 export const pushDetails = async (req, res, next) => {
   try {
     const student = new Student(req.body)
-    const newDetails = await student.save()
-    res.status(200).json(newDetails)
+    const filter = req.body.uid
+    const studentExists = await Student.findOne({ uid: filter })
+    if (studentExists) {
+      res.status(404)
+      const err = new Error('Student already exists')
+      next(err)
+    } else {
+      const newDetails = await student.save()
+      res.status(200).json(newDetails)
+    }
   } catch (error) {
     res.status(500)
     const err = new Error('Internal Server Error')
