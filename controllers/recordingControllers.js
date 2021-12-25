@@ -78,8 +78,8 @@ export const pushRecording = async (req, res, next) => {
     // console.log('This is body>>>')
     // console.log(body)
     const recording = new Recording(body)
-    const filter = body.studentUid
-    const recordingExists = await Recording.findOne({ studentUid: filter })
+    const filter = body.meetingId
+    const recordingExists = await Recording.findOne({ meetingId: filter })
     if (recordingExists) {
       res.status(404)
       const err = new Error('Recording already exists')
