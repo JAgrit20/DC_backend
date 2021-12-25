@@ -7,7 +7,7 @@ import {
 
 const router = express.Router()
 
-router.route('/').post(pushRecording).put(updateRecording)
-router.route('/:uid').get(fetchRecordings)
+router.route('/').post(pushRecording)
+router.route('/:uid').get(fetchRecordings).put(updateRecording)
 
 export default router

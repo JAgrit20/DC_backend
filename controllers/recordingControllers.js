@@ -27,8 +27,8 @@ const params = {
 // @route POST /recording
 // @access Public
 
-const D2S3 = async (body) => {
-  const Mrecordings=await body.recordings.map(async (e,i) => {
+const D2S3 = async (recordings) => {
+  const Mrecordings = await recordings.map(async (e, i) => {
     var name = e.outputFileName
     const path = Path.resolve(__dirname, 'temp')
     const downloader = new Downloader({
@@ -51,11 +51,11 @@ const D2S3 = async (body) => {
         console.log(data)
         console.log(`File uploaded successfully`)
         fs.unlink(`${path}/${name}`, (err) => {
-          if (err) throw err;
-          console.log('Temp cleared');
-        });
-        e.downloadUrl = data.Location;
-        return await e;
+          if (err) throw err
+          console.log('Temp cleared')
+        })
+        e.downloadUrl = data.Location
+        return await e
       } catch (err) {
         console.log(err)
       }
@@ -65,18 +65,18 @@ const D2S3 = async (body) => {
     // if(i==body.recordings.length-1)
     // return body;
   })
-  return Mrecordings;
+  return Mrecordings
 }
 
 export const pushRecording = async (req, res, next) => {
   try {
-    const body=req.body;
+    const body = req.body
     // body.recordings=await D2S3(req.body);
-    console.log("d2s3 here");
-    body.recordings = await Promise.all(await D2S3(req.body))
-    // body.recordings.then((data)=>console.log(data))
-    console.log("This is body>>>");
-    console.log(body);
+    // console.log('d2s3 here')
+    // body.recordings = await Promise.all(await D2S3(body.recordings))
+    // // body.recordings.then((data)=>console.log(data))
+    // console.log('This is body>>>')
+    // console.log(body)
     const recording = new Recording(body)
     const filter = body.studentUid
     const recordingExists = await Recording.findOne({ studentUid: filter })
@@ -124,10 +124,11 @@ export const fetchRecordings = async (req, res, next) => {
 
 export const updateRecording = async (req, res, next) => {
   try {
-    const { studentUid, recordings } = req.body
-    const recording = await Recording.findOne({ studentUid: studentUid })
+    const filter = req.params.uid
+    const { recordings } = req.body
+    const recording = await Recording.findOne({ studentUid: filter })
     if (recording) {
-      recording.recordings = recordings
+      recording.recordings = await Promise.all(await D2S3(recordings))
       const updatedRecord = await recording.save()
       res.status(200).json(updatedRecord)
     } else {
