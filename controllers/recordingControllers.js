@@ -97,10 +97,25 @@ export const pushRecording = async (req, res, next) => {
 }
 
 // @desc Fetch student details from DB
-// @route GET /recording/:id
+// @route GET /recording
 // @access Public
 
 export const fetchRecordings = async (req, res, next) => {
+  try {
+    const recording = await Recording.find({})
+    res.status(200).json(recording)
+  } catch (error) {
+    res.status(500)
+    const err = new Error('Internal Server Error')
+    next(err)
+  }
+}
+
+// @desc Fetch student details from DB
+// @route GET /recording/:id
+// @access Public
+
+export const fetchRecordingsById = async (req, res, next) => {
   try {
     const filter = req.params.uid
     const recording = await Recording.findOne({ studentUid: filter })
