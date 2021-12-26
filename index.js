@@ -8,7 +8,7 @@ import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 import connectDB from './config/db.js'
 
 import fs from 'fs'
-import https  from "https";
+import https from 'https'
 // var https = require('https');
 
 dotenv.config()
@@ -34,9 +34,10 @@ app.use(errorHandler)
 
 // app.listen(PORT, console.log(`Server is running on port ${PORT}`))
 
+var credentials = {
+  key: fs.readFileSync('privkey_dcwebsite.pem'),
+  cert: fs.readFileSync('fullchain_dcwebsite.pem'),
+}
 
-
-var credentials = {key: fs.readFileSync('privkey_dcwebsite.pem'), cert:  fs.readFileSync('fullchain_dcwebsite.pem')};
-
-var httpsServer = https.createServer(credentials, app);
-  httpsServer.listen(8000);
+var httpsServer = https.createServer(credentials, app)
+httpsServer.listen(8000)

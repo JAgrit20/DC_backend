@@ -139,9 +139,9 @@ export const fetchRecordingsById = async (req, res, next) => {
 
 export const updateRecording = async (req, res, next) => {
   try {
-    const filter = req.params.uid
+    const filter = req.params.meetingId
     const { recordings } = req.body
-    const recording = await Recording.findOne({ studentUid: filter })
+    const recording = await Recording.findOne({ meetingId: filter })
     if (recording) {
       recording.recordings = await Promise.all(await D2S3(recordings))
       const updatedRecord = await recording.save()
