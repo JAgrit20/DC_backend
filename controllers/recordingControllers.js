@@ -139,7 +139,7 @@ export const fetchRecordingsById = async (req, res, next) => {
 
 export const updateRecording = async (req, res, next) => {
   try {
-    const filter = req.params.meetingId
+    const filter = req.params.uid
     const { recordings } = req.body
     const recording = await Recording.findOne({ meetingId: filter })
     if (recording) {

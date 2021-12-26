@@ -9,7 +9,6 @@ import {
 const router = express.Router()
 
 router.route('/').post(pushRecording).get(fetchRecordings)
-router.route('/:uid').get(fetchRecordingsById)
-router.route(':/meetingId').put(updateRecording)
+router.route('/:uid').get(fetchRecordingsById).put(updateRecording)
 
 export default router
