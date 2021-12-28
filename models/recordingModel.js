@@ -14,21 +14,7 @@ const recordingSchema = new mongoose.Schema(
       type: 'String',
       required: true,
     },
-    recordings: [
-      {
-        status: { type: 'String' },
-        outputFileName: { type: 'String' },
-        downloadUrlExpiry: { type: 'String' },
-        roomUUID: { type: 'String' },
-        downloadUrl: { type: 'String' },
-        errMessage: { type: 'String' },
-        startedTime: { type: 'String' },
-        stoppedTime: { type: 'String' },
-        invokedTime: { type: 'String' },
-        fileSize: { type: 'Number' },
-        id: { type: 'String' },
-      },
-    ],
+    recordings: [],
   },
   {
     timestamps: true,
