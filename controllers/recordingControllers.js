@@ -118,7 +118,7 @@ export const fetchRecordings = async (req, res, next) => {
 export const fetchRecordingsById = async (req, res, next) => {
   try {
     const filter = req.params.uid
-    const recording = await Recording.findOne({ studentUid: filter })
+    const recording = await Recording.find({ studentUid: filter })
     if (recording) {
       res.status(200).json(recording)
     } else {
