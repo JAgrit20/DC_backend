@@ -14,6 +14,15 @@ const recordingSchema = new mongoose.Schema(
       type: 'String',
       required: true,
     },
+    board: {
+      type: 'String',
+    },
+    grade: {
+      type: 'String',
+    },
+    subject: {
+      type: 'String',
+    },
     recordings: [],
   },
   {
