@@ -35,8 +35,8 @@ app.use(errorHandler)
 // app.listen(PORT, console.log(`Server is running on port ${PORT}`))
 
 var credentials = {
-  key: fs.readFileSync('privkey_dcwebsite.pem'),
-  cert: fs.readFileSync('fullchain_dcwebsite.pem'),
+  key: fs.readFileSync('privkey_webapp.pem'),
+  cert: fs.readFileSync('fullchain_webapp.pem'),
 }
 
 var httpsServer = https.createServer(credentials, app)

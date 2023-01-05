@@ -6,6 +6,7 @@ import Student from '../models/studentModel.js'
 
 export const pushDetails = async (req, res, next) => {
   try {
+    console.log("jag request",req.body)
     const student = new Student(req.body)
     const filter = req.body.uid
     const studentExists = await Student.findOne({ uid: filter })
@@ -52,10 +53,12 @@ export const fetchDetails = async (req, res, next) => {
 
 export const updateDetails = async (req, res, next) => {
   try {
-    const { uid, meetingId } = req.body
+    const { uid, meetingId, board,D_img} = req.body
     const student = await Student.findOne({ uid: uid })
     if (student) {
       student.meetingId = meetingId
+      student.board = board
+      student.D_img = D_img
       const updatedStudent = await student.save()
       res.status(200).json(updatedStudent)
     } else {

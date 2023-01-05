@@ -14,15 +14,27 @@ const recordingSchema = new mongoose.Schema(
       type: 'String',
       required: true,
     },
-    board: {
-      type: 'String',
-    },
-    grade: {
-      type: 'String',
-    },
     subject: {
       type: 'String',
     },
+    
+    board: {
+      type: 'String',
+    },
+
+    grade: {
+      type: 'String',
+    },
+    topic: {
+      type: 'String',
+    },
+    keyword: {
+      type: 'String',
+    },
+    doubt_imageUrl: {
+      type: 'String',
+    },
+
     recordings: [],
   },
   {

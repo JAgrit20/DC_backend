@@ -71,12 +71,7 @@ const D2S3 = async (recordings) => {
 export const pushRecording = async (req, res, next) => {
   try {
     const body = req.body
-    // body.recordings=await D2S3(req.body);
-    // console.log('d2s3 here')
-    // body.recordings = await Promise.all(await D2S3(body.recordings))
-    // // body.recordings.then((data)=>console.log(data))
-    // console.log('This is body>>>')
-    // console.log(body)
+
     const recording = new Recording(body)
     const filter = body.meetingId
     const recordingExists = await Recording.findOne({ meetingId: filter })

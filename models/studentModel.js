@@ -6,8 +6,15 @@ const studentSchema = new mongoose.Schema(
       type: 'String',
     },
     meetingId: {
-      type: String,
+      type: 'String',
     },
+    board: {
+      type: 'String',
+    },
+    D_img: {
+      type: 'String',
+    },
+
   },
   {
     timestamps: true,
